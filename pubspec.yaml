@@ -46,6 +46,7 @@ dependencies:
   dio: ^5.8.0+1
   printing: ^5.14.2
   pdf: ^3.11.3
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:

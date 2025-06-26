@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-class MenuRequestModel {
+class PembayaranRequestModel {
   final int? pemesananId;
   final String? buktiBayar;
   final String? status;
 
-  MenuRequestModel({this.pemesananId, this.buktiBayar, this.status});
+  PembayaranRequestModel({this.pemesananId, this.buktiBayar, this.status});
 
-  factory MenuRequestModel.fromJson(String str) =>
-      MenuRequestModel.fromMap(json.decode(str));
+  factory PembayaranRequestModel.fromJson(String str) =>
+      PembayaranRequestModel.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory MenuRequestModel.fromMap(Map<String, dynamic> json) =>
-      MenuRequestModel(
+  factory PembayaranRequestModel.fromMap(Map<String, dynamic> json) =>
+      PembayaranRequestModel(
         pemesananId: json["pemesanan_id"],
         buktiBayar: json["bukti_bayar"],
         status: json["status"],

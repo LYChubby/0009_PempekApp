@@ -111,4 +111,37 @@ class ServiceHttpClient {
       throw Exception('GET Request Failed: $e');
     }
   }
+
+  // MULTIPART POST WITH TOKEN
+  Future<http.StreamedResponse> multipartPostWithToken({
+    required String endpoint,
+    required Map<String, String> fields,
+    required String fileFieldName,
+    required String filePath,
+  }) async {
+    final token = await secureStorage.read(key: 'authToken');
+
+    final uri = Uri.parse('$baseurl$endpoint');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Tambahkan header Authorization
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    });
+
+    // Tambahkan form fields
+    request.fields.addAll(fields);
+
+    // Tambahkan file
+    final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
+    request.files.add(file);
+
+    try {
+      final response = await request.send();
+      return response;
+    } catch (e) {
+      throw Exception('Multipart POST failed: $e');
+    }
+  }
 }

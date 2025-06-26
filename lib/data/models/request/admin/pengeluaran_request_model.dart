@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-class MenuRequestModel {
+class PengeluaranRequestModel {
   final String? keterangan;
   final int? jumlah;
   final DateTime? tanggal;
 
-  MenuRequestModel({this.keterangan, this.jumlah, this.tanggal});
+  PengeluaranRequestModel({this.keterangan, this.jumlah, this.tanggal});
 
-  factory MenuRequestModel.fromJson(String str) =>
-      MenuRequestModel.fromMap(json.decode(str));
+  factory PengeluaranRequestModel.fromJson(String str) =>
+      PengeluaranRequestModel.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory MenuRequestModel.fromMap(Map<String, dynamic> json) =>
-      MenuRequestModel(
+  factory PengeluaranRequestModel.fromMap(Map<String, dynamic> json) =>
+      PengeluaranRequestModel(
         keterangan: json["keterangan"],
         jumlah: json["jumlah"],
         tanggal: json["tanggal"] == null

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class MenuRequestModel {
+class PemesananRequestModel {
   final int? userId;
   final int? menuId;
   final int? jumlah;
@@ -10,7 +10,7 @@ class MenuRequestModel {
   final String? pembayaran;
   final String? statusBayar;
 
-  MenuRequestModel({
+  PemesananRequestModel({
     this.userId,
     this.menuId,
     this.jumlah,
@@ -21,13 +21,13 @@ class MenuRequestModel {
     this.statusBayar,
   });
 
-  factory MenuRequestModel.fromJson(String str) =>
-      MenuRequestModel.fromMap(json.decode(str));
+  factory PemesananRequestModel.fromJson(String str) =>
+      PemesananRequestModel.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory MenuRequestModel.fromMap(Map<String, dynamic> json) =>
-      MenuRequestModel(
+  factory PemesananRequestModel.fromMap(Map<String, dynamic> json) =>
+      PemesananRequestModel(
         userId: json["user_id"],
         menuId: json["menu_id"],
         jumlah: json["jumlah"],

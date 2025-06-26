@@ -116,32 +116,63 @@ class ServiceHttpClient {
   Future<http.StreamedResponse> multipartPostWithToken({
     required String endpoint,
     required Map<String, String> fields,
-    required String fileFieldName,
-    required String filePath,
+    String? fileFieldName,
+    String? filePath,
   }) async {
     final token = await secureStorage.read(key: 'authToken');
-
     final uri = Uri.parse('$baseurl$endpoint');
     final request = http.MultipartRequest('POST', uri);
 
-    // Tambahkan header Authorization
     request.headers.addAll({
       'Authorization': 'Bearer $token',
       'Accept': 'application/json',
     });
 
-    // Tambahkan form fields
     request.fields.addAll(fields);
 
-    // Tambahkan file
-    final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
-    request.files.add(file);
+    // Optional file upload
+    if (fileFieldName != null && filePath != null && filePath.isNotEmpty) {
+      final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
+      request.files.add(file);
+    }
 
     try {
       final response = await request.send();
       return response;
     } catch (e) {
       throw Exception('Multipart POST failed: $e');
+    }
+  }
+
+  // MULTIPART PUT WITH TOKEN
+  Future<http.StreamedResponse> multipartPutWithToken({
+    required String endpoint,
+    required Map<String, String> fields,
+    String? fileFieldName,
+    String? filePath,
+  }) async {
+    final token = await secureStorage.read(key: 'authToken');
+    final uri = Uri.parse('$baseurl$endpoint');
+    final request = http.MultipartRequest('PUT', uri);
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    });
+
+    request.fields.addAll(fields);
+
+    // Optional file upload
+    if (fileFieldName != null && filePath != null && filePath.isNotEmpty) {
+      final file = await http.MultipartFile.fromPath(fileFieldName, filePath);
+      request.files.add(file);
+    }
+
+    try {
+      final response = await request.send();
+      return response;
+    } catch (e) {
+      throw Exception('Multipart PUT failed: $e');
     }
   }
 }

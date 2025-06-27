@@ -53,10 +53,10 @@ class AuthRepository {
         requestModel.toMap(),
       );
       final jsonResponse = json.decode(response.body);
+
       if (response.statusCode == 201) {
-        final registerResponse = jsonResponse['message'] as String;
-        log("Registration successful: ${registerResponse}");
-        return Right(registerResponse);
+        log("Registration successful");
+        return Right("Registration successful");
       } else {
         log("Registration failed: ${jsonResponse['message']}");
         return Left(jsonResponse['message'] ?? "Registration failed");

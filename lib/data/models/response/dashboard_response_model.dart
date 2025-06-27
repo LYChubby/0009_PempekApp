@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class DashboardResponseModel {
   final int? totalPenjualan;
-  final String? totalPemasukan;
+  final int? totalPemasukan;
   final int? totalPengeluaran;
   final int? balance;
 

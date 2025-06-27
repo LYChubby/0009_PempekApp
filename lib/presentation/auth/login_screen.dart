@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pempekapp/data/models/request/auth/login_request_model.dart';
+import 'package:pempekapp/presentation/auth/admin/dashboard_page.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/auth/register_screen.dart';
 
@@ -32,12 +33,12 @@ class _LoginPageState extends State<LoginPage> {
                   MaterialPageRoute(builder: (_) => AdminDashboardPage()),
                   (route) => false,
                 );
-              } else if (role == 'user') {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => MenuPage()),
-                  (route) => false,
-                );
+              } else if (role == 'customer') {
+                // Navigator.pushAndRemoveUntil(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => MenuPage()),
+                //   (route) => false,
+                // );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Role tidak dikenali")),

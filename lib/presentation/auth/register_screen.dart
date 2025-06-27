@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController namaController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController noHpController = TextEditingController();
+  final TextEditingController alamatController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confpassController = TextEditingController();
   bool _obscureText = true;
@@ -93,6 +94,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                _buildTextField("Alamat", Icons.home, alamatController),
+
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
@@ -137,6 +141,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           email: emailController.text,
                           password: passwordController.text,
                           noHp: noHpController.text,
+                          alamat: alamatController.text,
+                          role: 'customer', // Default role
                         );
                         context.read<RegisterBloc>().add(
                           RegisterRequested(requestModel: request),

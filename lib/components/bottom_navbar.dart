@@ -38,6 +38,10 @@ class MyBottomNavBar extends StatelessWidget {
             onPressed: () {},
             icon: Icon(Icons.map, color: Color(0xFF0C9869)),
           ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.dashboard, color: Color(0xFF0C9869)),
+          ),
         ],
       ),
     );

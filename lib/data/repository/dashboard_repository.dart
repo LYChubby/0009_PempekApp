@@ -10,19 +10,24 @@ class DashboardRepository {
 
   DashboardRepository(this._http);
 
-  Future<Either<String, DashboardResponseModel>> getRekap() async {
+  Future<Either<String, DashboardResponseModel>> getRekap(
+    String endpoint,
+  ) async {
     try {
-      final response = await _http.get('dashboard-admin');
+      final response = await _http.get(endpoint);
+
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        final result = DashboardResponseModel.fromMap(jsonData);
+        final jsonMap = jsonDecode(response.body);
+        final result = DashboardResponseModel.fromMap(
+          jsonMap,
+        ); // langsung map root
         return Right(result);
       } else {
         final res = jsonDecode(response.body);
         return Left(res['message'] ?? "Gagal memuat data dashboard");
       }
-    } catch (e) {
-      log("Dashboard Get Error: $e");
+    } catch (e, stackTrace) {
+      log("Dashboard Get Error", error: e, stackTrace: stackTrace);
       return Left("Terjadi kesalahan sistem");
     }
   }

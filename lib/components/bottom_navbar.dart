@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pempekapp/presentation/auth/admin/dashboard_page.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({super.key});
@@ -14,7 +15,7 @@ class MyBottomNavBar extends StatelessWidget {
           BoxShadow(
             offset: Offset(0, -10),
             blurRadius: 35,
-            color: Color(0xFF0C9869).withOpacity(0.38),
+            color: Color(0xFF582D1D).withOpacity(0.4),
           ),
         ],
       ),
@@ -22,25 +23,40 @@ class MyBottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.menu, color: Color(0xFF0C9869)),
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => MenuPage()),
+              // );
+            },
+            icon: Icon(Icons.menu, color: Color(0xFF582D1D)),
+          ),
+          IconButton(
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => MapPage()),
+              // );
+            },
+            icon: Icon(Icons.history, color: Color(0xFF582D1D)),
+          ),
+          IconButton(
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => MapPage()),
+              // );
+            },
+            icon: Icon(Icons.map, color: Color(0xFF582D1D)),
           ),
           IconButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MapPage()),
+                MaterialPageRoute(builder: (context) => AdminDashboardPage()),
               );
             },
-            icon: Icon(Icons.history, color: Color(0xFF0C9869)),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.map, color: Color(0xFF0C9869)),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.dashboard, color: Color(0xFF0C9869)),
+            icon: Icon(Icons.dashboard, color: Color(0xFF582D1D)),
           ),
         ],
       ),

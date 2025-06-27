@@ -48,9 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 60),
                   Image.network(
                     'https://static.vecteezy.com/system/resources/thumbnails/051/102/095/small_2x/pempek-an-amazing-indonesian-food-illustration-png.png',
-                    width: 200,
                     height: 200,
-                    fit: BoxFit.cover,
                   ),
                   const SizedBox(height: 20),
                   const Text(

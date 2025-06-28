@@ -7,6 +7,18 @@ class PembayaranRequestModel {
 
   PembayaranRequestModel({this.pemesananId, this.buktiBayar, this.status});
 
+  PembayaranRequestModel copyWith({
+    int? pemesananId,
+    String? buktiBayar,
+    String? status,
+  }) {
+    return PembayaranRequestModel(
+      pemesananId: pemesananId ?? this.pemesananId,
+      buktiBayar: buktiBayar ?? this.buktiBayar,
+      status: status ?? this.status,
+    );
+  }
+
   factory PembayaranRequestModel.fromJson(String str) =>
       PembayaranRequestModel.fromMap(json.decode(str));
 

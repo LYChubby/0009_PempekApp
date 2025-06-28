@@ -5,6 +5,7 @@ import 'package:pempekapp/data/models/request/auth/login_request_model.dart';
 import 'package:pempekapp/presentation/auth/admin/dashboard_page.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/auth/register_screen.dart';
+import 'package:pempekapp/presentation/menu/menu_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,11 +35,11 @@ class _LoginPageState extends State<LoginPage> {
                   (route) => false,
                 );
               } else if (role == 'customer') {
-                // Navigator.pushAndRemoveUntil(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => MenuPage()),
-                //   (route) => false,
-                // );
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => MenuPage()),
+                  (route) => false,
+                );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Role tidak dikenali")),

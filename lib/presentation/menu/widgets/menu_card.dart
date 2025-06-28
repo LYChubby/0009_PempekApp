@@ -4,8 +4,14 @@ import 'package:pempekapp/data/models/response/menu_response_model.dart';
 class MenuCard extends StatelessWidget {
   final MenuResponseModel menu;
   final VoidCallback onTap;
+  final VoidCallback onAddToCart;
 
-  const MenuCard({super.key, required this.menu, required this.onTap});
+  const MenuCard({
+    super.key,
+    required this.menu,
+    required this.onTap,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,28 +54,38 @@ class MenuCard extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      menu.nama ?? '-',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            menu.nama ?? '-',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Rp ${menu.harga}',
+                            style: const TextStyle(
+                              color: Color(0xFF582D1D),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    // Text(
-                    //   menu.deskripsi ?? 'Tidak ada deskripsi',
-                    //   style: const TextStyle(color: Colors.grey, fontSize: 14),
-                    // ),
-                    // const SizedBox(height: 8),
-                    Text(
-                      'Rp ${menu.harga}',
-                      style: const TextStyle(
-                        color: Color(0xFF582D1D),
-                        fontWeight: FontWeight.w600,
-                      ),
+                    IconButton(
+                      onPressed: onAddToCart,
+                      icon: const Icon(Icons.add_shopping_cart),
+                      color: const Color(0xFF582D1D),
+                      tooltip: 'Tambah ke keranjang',
                     ),
                   ],
                 ),

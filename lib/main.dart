@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pempekapp/data/repository/auth_repository.dart';
+import 'package:pempekapp/data/repository/dashboard_repository.dart';
+import 'package:pempekapp/data/repository/menu_repository.dart';
+import 'package:pempekapp/data/repository/pembayaran_repository.dart';
+import 'package:pempekapp/data/repository/pemesanan_repository.dart';
 import 'package:pempekapp/data/services/service_http_client.dart';
+import 'package:pempekapp/presentation/auth/admin/bloc/dashboard_admin_bloc.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:pempekapp/presentation/auth/login_screen.dart';
+import 'package:pempekapp/presentation/menu/bloc/menu_bloc.dart';
+import 'package:pempekapp/presentation/pemesanan/bloc/checkout_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +31,21 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) =>
               RegisterBloc(authRepository: AuthRepository(ServiceHttpClient())),
+        ),
+        BlocProvider(
+          create: (_) => DashboardAdminBloc(
+            dashboardRepository: DashboardRepository(ServiceHttpClient()),
+          ),
+        ),
+        BlocProvider(
+          create: (_) =>
+              MenuBloc(menuRepository: MenuRepository(ServiceHttpClient())),
+        ),
+        BlocProvider(
+          create: (_) => CheckoutBloc(
+            pemesananRepository: PemesananRepository(ServiceHttpClient()),
+            pembayaranRepository: PembayaranRepository(ServiceHttpClient()),
+          ),
         ),
       ],
       child: MaterialApp(

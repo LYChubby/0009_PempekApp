@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pempekapp/components/bottom_navbar.dart';
 import 'package:pempekapp/presentation/auth/admin/bloc/dashboard_admin_bloc.dart';
+import 'package:pempekapp/presentation/auth/admin/menu/kelola_menu_page.dart';
+import 'package:pempekapp/presentation/menu/bloc/menu_bloc.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -82,19 +84,27 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                           icon: Icons.fastfood,
                           label: 'Kelola Menu',
                           onTap: () {
-                            // TODO: Arahkan ke halaman menu admin
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider.value(
+                                  value: context.read<MenuBloc>(),
+                                  child: AdminKelolaMenuPage(),
+                                ),
+                              ),
+                            );
                           },
                         ),
                         _DashboardCard(
-                          icon: Icons.people,
-                          label: 'User Management',
+                          icon: Icons.receipt_long,
+                          label: 'Kelola Pesanan',
                           onTap: () {
                             // TODO: Arahkan ke halaman user
                           },
                         ),
                         _DashboardCard(
-                          icon: Icons.bar_chart,
-                          label: 'Laporan',
+                          icon: Icons.money_off,
+                          label: 'Kelola Pengeluaran',
                           onTap: () {
                             // TODO: Arahkan ke laporan
                           },

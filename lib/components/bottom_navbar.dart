@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pempekapp/components/map_page.dart';
 import 'package:pempekapp/presentation/auth/admin/bloc/dashboard_admin_bloc.dart';
 import 'package:pempekapp/presentation/auth/admin/dashboard_page.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/menu/bloc/menu_bloc.dart';
 import 'package:pempekapp/presentation/menu/menu_page.dart';
+import 'package:pempekapp/presentation/riwayat_pemesanan/bloc/riwayat_bloc.dart';
+import 'package:pempekapp/presentation/riwayat_pemesanan/riwayat_pesanan_page.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   const MyBottomNavBar({super.key});
@@ -53,19 +56,24 @@ class MyBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => MapPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider.value(
+                        value: context.read<RiwayatBloc>(),
+                        child: RiwayatPesananPage(),
+                      ),
+                    ),
+                  );
                 },
                 icon: Icon(Icons.history, color: Color(0xFF582D1D)),
               ),
               IconButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => MapPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MapPage()),
+                  );
                 },
                 icon: Icon(Icons.map, color: Color(0xFF582D1D)),
               ),

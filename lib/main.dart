@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pempekapp/data/repository/auth_repository.dart';
 import 'package:pempekapp/data/repository/dashboard_repository.dart';
+import 'package:pempekapp/data/repository/kelola_barang_masuk_repository.dart';
 import 'package:pempekapp/data/repository/menu_repository.dart';
 import 'package:pempekapp/data/repository/pembayaran_repository.dart';
 import 'package:pempekapp/data/repository/pemesanan_repository.dart';
+import 'package:pempekapp/data/repository/pengeluaran_repository.dart';
+import 'package:pempekapp/data/repository/riwayat_pesanan_repository.dart';
+import 'package:pempekapp/data/repository/transaksi_repository.dart';
 import 'package:pempekapp/data/services/service_http_client.dart';
+import 'package:pempekapp/presentation/auth/admin/barang-masuk/bloc/barangmasuk_bloc.dart';
 import 'package:pempekapp/presentation/auth/admin/bloc/dashboard_admin_bloc.dart';
+import 'package:pempekapp/presentation/auth/admin/pengeluaran/bloc/pengeluaran_bloc.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:pempekapp/presentation/auth/login_screen.dart';
 import 'package:pempekapp/presentation/menu/bloc/menu_bloc.dart';
 import 'package:pempekapp/presentation/pemesanan/bloc/checkout_bloc.dart';
+import 'package:pempekapp/presentation/riwayat_pemesanan/bloc/riwayat_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,8 +50,27 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => CheckoutBloc(
-            pemesananRepository: PemesananRepository(ServiceHttpClient()),
+            transaksiRepository: TransaksiRepository(ServiceHttpClient()),
             pembayaranRepository: PembayaranRepository(ServiceHttpClient()),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => RiwayatBloc(
+            riwayatPemesananRepository: RiwayatPesananRepository(
+              ServiceHttpClient(),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => PengeluaranBloc(
+            pengeluaranRepository: PengeluaranRepository(ServiceHttpClient()),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => BarangmasukBloc(
+            kelolaBarangMasukRepository: KelolaBarangRepository(
+              ServiceHttpClient(),
+            ),
           ),
         ),
       ],

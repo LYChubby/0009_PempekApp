@@ -66,7 +66,7 @@ class MenuCard extends StatelessWidget {
                           Text(
                             menu.nama ?? '-',
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -74,6 +74,7 @@ class MenuCard extends StatelessWidget {
                           Text(
                             'Rp ${menu.harga}',
                             style: const TextStyle(
+                              fontSize: 10,
                               color: Color(0xFF582D1D),
                               fontWeight: FontWeight.w600,
                             ),

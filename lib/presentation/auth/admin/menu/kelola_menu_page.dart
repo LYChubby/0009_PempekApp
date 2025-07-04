@@ -24,7 +24,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Kelola Menu"),
-        backgroundColor: const Color(0xFF582D1D),
+        backgroundColor: const Color.fromARGB(255, 88, 45, 29),
         foregroundColor: Colors.white,
       ),
       body: BlocConsumer<MenuBloc, MenuState>(
@@ -106,7 +106,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showFormDialog(context),
-        backgroundColor: const Color(0xFF582D1D),
+        backgroundColor: const Color.fromARGB(255, 88, 45, 29),
         child: const Icon(Icons.add),
       ),
     );

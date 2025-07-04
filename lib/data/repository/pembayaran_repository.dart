@@ -51,13 +51,13 @@ class PembayaranRepository {
 
   /// Buat pembayaran baru (upload bukti bayar)
   Future<Either<String, String>> create({
-    required int pemesananId,
+    required int transaksiId,
     required String buktiBayar,
   }) async {
     try {
       final response = await _http.multipartPostWithToken(
         endpoint: 'pembayaran',
-        fields: {'pemesanan_id': pemesananId.toString()},
+        fields: {'transaksi_id': transaksiId.toString()},
         fileFieldName: 'bukti_bayar',
         filePath: buktiBayar,
       );

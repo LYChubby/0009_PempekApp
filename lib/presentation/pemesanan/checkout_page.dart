@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pempekapp/data/models/request/customer/pembayaran_request_model.dart';
 import 'package:pempekapp/data/models/request/customer/pemesanan_request_model.dart';
+import 'package:pempekapp/data/models/request/transaksi/transaksi_request_model.dart';
 import 'package:pempekapp/data/models/response/menu_response_model.dart';
 import 'package:pempekapp/presentation/pemesanan/bloc/checkout_bloc.dart';
 
@@ -50,30 +51,37 @@ class _CheckoutPageState extends State<CheckoutPage> {
       return;
     }
 
+    // List detail pemesanan (item per item)
     final pemesananList = widget.cart.map((item) {
       final menu = item['menu'] as MenuResponseModel;
       final jumlah = item['quantity'] as int;
       final harga = menu.harga ?? 0;
       return PemesananRequestModel(
-        userId: widget.userId,
         menuId: menu.id,
         jumlah: jumlah,
         hargaSatuan: harga,
         totalHarga: harga * jumlah,
-        pengiriman: pengiriman,
-        pembayaran: pembayaran,
-        statusBayar: 'belum',
       );
     }).toList();
 
+    // Buat transaksi utama
+    final transaksiModel = TransaksiRequestModel(
+      userId: widget.userId,
+      pengiriman: pengiriman!,
+      metodePembayaran: pembayaran!,
+      detail: pemesananList,
+    );
+
+    // Upload bukti bayar
     final pembayaranModel = PembayaranRequestModel(
       buktiBayar: buktiBayar!.path,
     );
 
+    // Kirim ke BLoC
     context.read<CheckoutBloc>().add(
       CheckoutSubmitted(
-        pemesananRequest: pemesananList,
-        pembayaranRequest: pembayaranModel,
+        transaksiRequest: transaksiModel,
+        pembayaranRequest: PembayaranRequestModel(buktiBayar: buktiBayar!.path),
       ),
     );
   }
@@ -103,7 +111,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
               builder: (_) => const Center(child: CircularProgressIndicator()),
             );
           } else {
-            Navigator.pop(context); // close loading
+            Navigator.pop(context); // Tutup loading dialog
+
             if (state is CheckoutSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Pemesanan berhasil")),

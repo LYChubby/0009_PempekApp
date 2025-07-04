@@ -1,32 +1,28 @@
 import 'dart:convert';
 
 class RiwayatTransaksiResponseModel {
-  final int? idPemesanan;
-  final String? menu;
-  final int? jumlah;
-  final int? hargaSatuan;
-  final int? totalHarga;
+  final int? idTransaksi;
+  final String? namaUser;
   final String? pengiriman;
-  final String? pembayaranMetode;
+  final String? metodePembayaran;
   final String? statusBayar;
   final String? statusPembayaran;
   final String? buktiPembayaran;
-  final DateTime? tanggalPesan;
+  final DateTime? tanggalTransaksi;
   final DateTime? tanggalBayar;
+  final List<Item>? items;
 
   RiwayatTransaksiResponseModel({
-    this.idPemesanan,
-    this.menu,
-    this.jumlah,
-    this.hargaSatuan,
-    this.totalHarga,
+    this.idTransaksi,
+    this.namaUser,
     this.pengiriman,
-    this.pembayaranMetode,
+    this.metodePembayaran,
     this.statusBayar,
     this.statusPembayaran,
     this.buktiPembayaran,
-    this.tanggalPesan,
+    this.tanggalTransaksi,
     this.tanggalBayar,
+    this.items,
   });
 
   factory RiwayatTransaksiResponseModel.fromJson(String str) =>
@@ -36,36 +32,63 @@ class RiwayatTransaksiResponseModel {
 
   factory RiwayatTransaksiResponseModel.fromMap(Map<String, dynamic> json) =>
       RiwayatTransaksiResponseModel(
-        idPemesanan: json["id_pemesanan"],
-        menu: json["menu"],
-        jumlah: json["jumlah"],
-        hargaSatuan: json["harga_satuan"],
-        totalHarga: json["total_harga"],
+        idTransaksi: json["id_transaksi"],
+        namaUser: json["nama_user"],
         pengiriman: json["pengiriman"],
-        pembayaranMetode: json["pembayaran_metode"],
+        metodePembayaran: json["metode_pembayaran"],
         statusBayar: json["status_bayar"],
         statusPembayaran: json["status_pembayaran"],
         buktiPembayaran: json["bukti_pembayaran"],
-        tanggalPesan: json["tanggal_pesan"] == null
+        tanggalTransaksi: json["tanggal_transaksi"] == null
             ? null
-            : DateTime.parse(json["tanggal_pesan"]),
+            : DateTime.parse(json["tanggal_transaksi"]),
         tanggalBayar: json["tanggal_bayar"] == null
             ? null
             : DateTime.parse(json["tanggal_bayar"]),
+        items: json["items"] == null
+            ? []
+            : List<Item>.from(json["items"]!.map((x) => Item.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-    "id_pemesanan": idPemesanan,
+    "id_transaksi": idTransaksi,
+    "nama_user": namaUser,
+    "pengiriman": pengiriman,
+    "metode_pembayaran": metodePembayaran,
+    "status_bayar": statusBayar,
+    "status_pembayaran": statusPembayaran,
+    "bukti_pembayaran": buktiPembayaran,
+    "tanggal_transaksi": tanggalTransaksi?.toIso8601String(),
+    "tanggal_bayar": tanggalBayar?.toIso8601String(),
+    "items": items == null
+        ? []
+        : List<dynamic>.from(items!.map((x) => x.toMap())),
+  };
+}
+
+class Item {
+  final String? menu;
+  final int? jumlah;
+  final int? hargaSatuan;
+  final int? totalHarga;
+
+  Item({this.menu, this.jumlah, this.hargaSatuan, this.totalHarga});
+
+  factory Item.fromJson(String str) => Item.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory Item.fromMap(Map<String, dynamic> json) => Item(
+    menu: json["menu"],
+    jumlah: json["jumlah"],
+    hargaSatuan: json["harga_satuan"],
+    totalHarga: json["total_harga"],
+  );
+
+  Map<String, dynamic> toMap() => {
     "menu": menu,
     "jumlah": jumlah,
     "harga_satuan": hargaSatuan,
     "total_harga": totalHarga,
-    "pengiriman": pengiriman,
-    "pembayaran_metode": pembayaranMetode,
-    "status_bayar": statusBayar,
-    "status_pembayaran": statusPembayaran,
-    "bukti_pembayaran": buktiPembayaran,
-    "tanggal_pesan": tanggalPesan?.toIso8601String(),
-    "tanggal_bayar": tanggalBayar?.toIso8601String(),
   };
 }

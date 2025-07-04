@@ -1,19 +1,19 @@
 import 'dart:convert';
 
 class PembayaranRequestModel {
-  final int? pemesananId;
+  final int? transaksiId;
   final String? buktiBayar;
   final String? status;
 
-  PembayaranRequestModel({this.pemesananId, this.buktiBayar, this.status});
+  PembayaranRequestModel({this.transaksiId, this.buktiBayar, this.status});
 
   PembayaranRequestModel copyWith({
-    int? pemesananId,
+    int? transaksiId,
     String? buktiBayar,
     String? status,
   }) {
     return PembayaranRequestModel(
-      pemesananId: pemesananId ?? this.pemesananId,
+      transaksiId: transaksiId ?? this.transaksiId,
       buktiBayar: buktiBayar ?? this.buktiBayar,
       status: status ?? this.status,
     );
@@ -26,14 +26,14 @@ class PembayaranRequestModel {
 
   factory PembayaranRequestModel.fromMap(Map<String, dynamic> json) =>
       PembayaranRequestModel(
-        pemesananId: json["pemesanan_id"],
+        transaksiId: json["transaksi_id"],
         buktiBayar: json["bukti_bayar"],
         status: json["status"],
       );
 
   Map<String, dynamic> toMap() => {
-    "pemesanan_id": pemesananId,
+    "transaksi_id": transaksiId,
     "bukti_bayar": buktiBayar,
-    "status": status,
+    "status": status ?? "pending",
   };
 }

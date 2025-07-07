@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pempekapp/data/models/request/admin/menu_request_model.dart';
 import 'package:pempekapp/data/models/response/menu_response_model.dart';
+import 'package:pempekapp/data/services/service_http_client.dart';
 import 'package:pempekapp/presentation/menu/bloc/menu_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -15,6 +16,7 @@ class AdminKelolaMenuPage extends StatefulWidget {
 }
 
 class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
+  final serviceHttpClient = ServiceHttpClient();
   @override
   void initState() {
     super.initState();
@@ -52,7 +54,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
               itemBuilder: (context, index) {
                 final menu = menus[index];
                 final imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
-                    ? 'http://10.0.2.2:8000/storage/menu/${menu.gambar}'
+                    ? '${serviceHttpClient.storageUrl}menu/${menu.gambar}'
                     : 'https://via.placeholder.com/150';
 
                 return Card(
@@ -187,7 +189,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Image.network(
-                          'http://10.0.2.2:8000/storage/menu/${menu.gambar}',
+                          '${serviceHttpClient.storageUrl}menu/${menu.gambar}',
                           height: 100,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
@@ -212,7 +214,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
                       nama: namaController.text,
                       harga: int.tryParse(hargaController.text),
                       deskripsi: deskripsiController.text,
-                      gambar: isImageChanged ? pickedImage : null,
+                      gambarFile: isImageChanged ? pickedImage : null,
                     );
 
                     if (isEdit && menu != null) {
@@ -295,7 +297,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
 
   void _showDetailDialog(BuildContext context, MenuResponseModel menu) {
     final imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
-        ? 'http://10.0.2.2:8000/storage/menu/${menu.gambar}'
+        ? '${serviceHttpClient.storageUrl}menu/${menu.gambar}'
         : 'https://via.placeholder.com/150';
 
     showDialog(

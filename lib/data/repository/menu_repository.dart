@@ -51,13 +51,31 @@ class MenuRepository {
 
   Future<Either<String, String>> createMenu(MenuRequestModel model) async {
     try {
-      final response = await _client.postWithToken("menu", model.toMap());
+      if (model.gambarFile != null) {
+        // Gunakan multipart request jika ada file
+        final response = await _client.multipartPostWithToken(
+          endpoint: "menu",
+          fields: model.toMultipartMap(),
+          fileFieldName: "gambar",
+          filePath: model.gambarFile!.path,
+        );
 
-      if (response.statusCode == 201) {
-        return Right("Menu berhasil ditambahkan");
+        final responseData = await response.stream.bytesToString();
+        if (response.statusCode == 201) {
+          return Right("Menu berhasil ditambahkan");
+        } else {
+          final data = jsonDecode(responseData);
+          return Left(data["message"] ?? "Gagal menambahkan menu");
+        }
       } else {
-        final data = jsonDecode(response.body);
-        return Left(data["message"] ?? "Gagal menambahkan menu");
+        // Gunakan request JSON biasa jika tidak ada file
+        final response = await _client.postWithToken("menu", model.toMap());
+        if (response.statusCode == 201) {
+          return Right("Menu berhasil ditambahkan");
+        } else {
+          final data = jsonDecode(response.body);
+          return Left(data["message"] ?? "Gagal menambahkan menu");
+        }
       }
     } catch (e) {
       log("Create Menu Error: $e");
@@ -70,13 +88,31 @@ class MenuRepository {
     MenuRequestModel model,
   ) async {
     try {
-      final response = await _client.putWithToken("menu/$id", model.toMap());
+      if (model.gambarFile != null) {
+        // Gunakan multipart request jika ada file baru
+        final response = await _client.multipartPutWithToken(
+          endpoint: "menu/$id",
+          fields: model.toMultipartMap(),
+          fileFieldName: "gambar",
+          filePath: model.gambarFile!.path,
+        );
 
-      if (response.statusCode == 200) {
-        return Right("Menu berhasil diperbarui");
+        final responseData = await response.stream.bytesToString();
+        if (response.statusCode == 200) {
+          return Right("Menu berhasil diperbarui");
+        } else {
+          final data = jsonDecode(responseData);
+          return Left(data["message"] ?? "Gagal memperbarui menu");
+        }
       } else {
-        final data = jsonDecode(response.body);
-        return Left(data["message"] ?? "Gagal memperbarui menu");
+        // Gunakan request JSON biasa jika tidak ada file baru
+        final response = await _client.putWithToken("menu/$id", model.toMap());
+        if (response.statusCode == 200) {
+          return Right("Menu berhasil diperbarui");
+        } else {
+          final data = jsonDecode(response.body);
+          return Left(data["message"] ?? "Gagal memperbarui menu");
+        }
       }
     } catch (e) {
       log("Update Menu Error: $e");

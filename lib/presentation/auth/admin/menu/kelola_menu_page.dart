@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pempekapp/data/models/request/admin/menu_request_model.dart';
@@ -117,71 +119,148 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
     bool isEdit = false,
     MenuResponseModel? menu,
   }) {
-    final namaController = TextEditingController(text: menu?.nama);
+    final namaController = TextEditingController(text: menu?.nama ?? '');
     final hargaController = TextEditingController(
-      text: menu?.harga?.toString(),
+      text: menu?.harga?.toString() ?? '',
     );
-    final deskripsiController = TextEditingController(text: menu?.deskripsi);
+    final deskripsiController = TextEditingController(
+      text: menu?.deskripsi ?? '',
+    );
     XFile? pickedImage;
+    bool isImageChanged = false;
 
     showDialog(
       context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(isEdit ? 'Edit Menu' : 'Tambah Menu'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: namaController,
+                      decoration: const InputDecoration(labelText: 'Nama Menu'),
+                    ),
+                    TextField(
+                      controller: hargaController,
+                      decoration: const InputDecoration(labelText: 'Harga'),
+                      keyboardType: TextInputType.number,
+                    ),
+                    TextField(
+                      controller: deskripsiController,
+                      decoration: const InputDecoration(labelText: 'Deskripsi'),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        final source = await showImageSourceDialog(context);
+                        if (source != null) {
+                          final picker = ImagePicker();
+                          final image = await picker.pickImage(source: source);
+                          if (image != null) {
+                            setState(() {
+                              pickedImage = image;
+                              isImageChanged = true;
+                            });
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.image),
+                      label: Text(
+                        pickedImage == null ? 'Pilih Gambar' : 'Ganti Gambar',
+                      ),
+                    ),
+                    if (pickedImage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Image.file(
+                          File(pickedImage!.path),
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    else if (menu?.gambar != null && menu!.gambar!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Image.network(
+                          'http://10.0.2.2:8000/storage/menu/${menu.gambar}',
+                          height: 100,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                height: 100,
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.broken_image),
+                              ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Batal'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final data = MenuRequestModel(
+                      nama: namaController.text,
+                      harga: int.tryParse(hargaController.text),
+                      deskripsi: deskripsiController.text,
+                      gambar: isImageChanged ? pickedImage : null,
+                    );
+
+                    if (isEdit && menu != null) {
+                      context.read<MenuBloc>().add(
+                        MenuUpdated(id: menu.id!, requestModel: data),
+                      );
+                    } else {
+                      context.read<MenuBloc>().add(
+                        MenuCreated(requestModel: data),
+                      );
+                    }
+
+                    Navigator.pop(context);
+                  },
+                  child: Text(isEdit ? 'Simpan' : 'Tambah'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
+    return await showDialog<ImageSource>(
+      context: context,
       builder: (context) => AlertDialog(
-        title: Text(isEdit ? 'Edit Menu' : 'Tambah Menu'),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: namaController,
-                decoration: const InputDecoration(labelText: 'Nama Menu'),
-              ),
-              TextField(
-                controller: hargaController,
-                decoration: const InputDecoration(labelText: 'Harga'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: deskripsiController,
-                decoration: const InputDecoration(labelText: 'Deskripsi'),
-              ),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final picker = ImagePicker();
-                  pickedImage = await picker.pickImage(
-                    source: ImageSource.gallery,
-                  );
-                },
-                icon: const Icon(Icons.image),
-                label: const Text('Pilih Gambar'),
-              ),
-            ],
-          ),
+        title: const Text("Pilih Sumber Gambar"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Kamera"),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text("Galeri"),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final data = MenuRequestModel(
-                nama: namaController.text,
-                harga: int.tryParse(hargaController.text),
-                deskripsi: deskripsiController.text,
-                gambar: pickedImage,
-              );
-
-              if (isEdit && menu != null) {
-                context.read<MenuBloc>().add(
-                  MenuUpdated(id: menu.id!, requestModel: data),
-                );
-              } else {
-                context.read<MenuBloc>().add(MenuCreated(requestModel: data));
-              }
-
-              Navigator.pop(context);
-            },
-            child: Text(isEdit ? 'Simpan' : 'Tambah'),
           ),
         ],
       ),

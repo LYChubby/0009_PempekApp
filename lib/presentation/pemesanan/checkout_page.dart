@@ -35,10 +35,43 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickBuktiBayar() async {
-    final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
+    final source = await _showImageSourceDialog(context);
+    if (source == null) return;
+
+    final XFile? picked = await _picker.pickImage(source: source);
     if (picked != null) {
       setState(() => buktiBayar = File(picked.path));
     }
+  }
+
+  Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
+    return await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Pilih Sumber Gambar"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Kamera"),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text("Galeri"),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _submitCheckout() {
@@ -51,7 +84,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       return;
     }
 
-    // List detail pemesanan (item per item)
     final pemesananList = widget.cart.map((item) {
       final menu = item['menu'] as MenuResponseModel;
       final jumlah = item['quantity'] as int;
@@ -64,7 +96,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }).toList();
 
-    // Buat transaksi utama
     final transaksiModel = TransaksiRequestModel(
       userId: widget.userId,
       pengiriman: pengiriman!,
@@ -72,12 +103,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       detail: pemesananList,
     );
 
-    // Upload bukti bayar
-    final pembayaranModel = PembayaranRequestModel(
-      buktiBayar: buktiBayar!.path,
-    );
-
-    // Kirim ke BLoC
     context.read<CheckoutBloc>().add(
       CheckoutSubmitted(
         transaksiRequest: transaksiModel,
@@ -176,15 +201,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
               OutlinedButton.icon(
                 onPressed: _pickBuktiBayar,
                 icon: const Icon(Icons.upload_file),
-                label: const Text("Upload Bukti Bayar"),
+                label: Text(
+                  buktiBayar == null
+                      ? "Upload Bukti Bayar"
+                      : "Ganti Bukti Bayar",
+                ),
               ),
               if (buktiBayar != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
-                  child: Image.file(
-                    buktiBayar!,
-                    height: 150,
-                    fit: BoxFit.cover,
+                  child: Column(
+                    children: [
+                      Image.file(buktiBayar!, height: 150, fit: BoxFit.cover),
+                      TextButton(
+                        onPressed: () => setState(() => buktiBayar = null),
+                        child: const Text(
+                          "Hapus Bukti Bayar",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               const SizedBox(height: 30),

@@ -967,9 +967,9 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
     );
   }
 
-  Future<void> _downloadStrukPDF(BuildContext context, int transaksiId) async {
-    final url = '${serviceHttpClient.storagePdfUrl}/export-struk/$transaksiId';
-    final fileName = 'struk_pemesanan_$transaksiId.pdf';
+  Future<void> _downloadStrukPDF(BuildContext context, int idTransaksi) async {
+    final url = '${serviceHttpClient.storagePdfUrl}/export-struk/$idTransaksi';
+    final fileName = 'struk_pemesanan_$idTransaksi.pdf';
 
     try {
       final tempDir = await getApplicationDocumentsDirectory();
@@ -981,8 +981,9 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
         url,
         savePath,
         options: Options(
+          headers: {'Accept': 'application/pdf'},
           responseType: ResponseType.bytes,
-          followRedirects: false,
+          followRedirects: true,
           validateStatus: (status) => status! < 500,
         ),
       );

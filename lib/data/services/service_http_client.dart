@@ -6,7 +6,7 @@ class ServiceHttpClient {
   final String baseurl = 'http://10.0.2.2:8000/api/';
   final String storageUrl =
       'http://10.0.2.2:8000/storage/'; // Replace with your actual base URL
-  final String storagePdfUrl = 'http://10.0.2.2:8000/api/'; // Replace with
+  final String storagePdfUrl = 'http://10.0.2.2:8000';
   final secureStorage = FlutterSecureStorage();
 
   // POST

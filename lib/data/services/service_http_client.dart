@@ -3,9 +3,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ServiceHttpClient {
-  final String baseurl = 'http://192.168.0.227:8000/api/';
+  final String baseurl = 'http://10.0.2.2:8000/api/';
   final String storageUrl =
-      'http://192.168.0.227:8000/storage/'; // Replace with your actual base URL
+      'http://10.0.2.2:8000/storage/'; // Replace with your actual base URL
+  final String storagePdfUrl = 'http://10.0.2.2:8000/api/'; // Replace with
   final secureStorage = FlutterSecureStorage();
 
   // POST

@@ -1,8 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pempekapp/data/models/response/login_response_model.dart';
 import 'package:pempekapp/data/models/response/riwayat_transaksi_response_model.dart';
+import 'package:pempekapp/data/services/service_http_client.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/riwayat_pemesanan/bloc/riwayat_bloc.dart';
 
@@ -18,6 +22,8 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
   late LoginResponseModel _user;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  final serviceHttpClient = ServiceHttpClient();
 
   @override
   void initState() {
@@ -607,6 +613,26 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
                       const SizedBox(width: 12),
                     ],
                     Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          if (transaksi.idTransaksi != null) {
+                            _downloadStrukPDF(context, transaksi.idTransaksi!);
+                          }
+                        },
+                        icon: const Icon(Icons.picture_as_pdf, size: 18),
+                        label: const Text("Struk"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
                       child: TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: const Text(
@@ -939,6 +965,49 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
         ],
       ),
     );
+  }
+
+  Future<void> _downloadStrukPDF(BuildContext context, int transaksiId) async {
+    final url = '${serviceHttpClient.storagePdfUrl}/export-struk/$transaksiId';
+    final fileName = 'struk_pemesanan_$transaksiId.pdf';
+
+    try {
+      final tempDir = await getApplicationDocumentsDirectory();
+      final savePath = '${tempDir.path}/$fileName';
+
+      final dio = Dio();
+
+      final response = await dio.download(
+        url,
+        savePath,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status! < 500,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Berhasil diunduh, tampilkan snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Berhasil mengunduh struk ke $savePath')),
+        );
+
+        // Buka file langsung (opsional)
+        OpenFile.open(savePath);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal mengunduh PDF (${response.statusCode})'),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error download: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan saat mengunduh PDF')),
+      );
+    }
   }
 
   final List<String> statusBayarOptions = ['belum', 'sudah'];

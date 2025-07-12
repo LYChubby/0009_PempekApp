@@ -20,8 +20,6 @@ class MenuRequestModel {
   factory MenuRequestModel.fromJson(String str) =>
       MenuRequestModel.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
-
   factory MenuRequestModel.fromMap(Map<String, dynamic> json) =>
       MenuRequestModel(
         nama: json["nama"],
@@ -34,7 +32,6 @@ class MenuRequestModel {
     "nama": nama,
     "deskripsi": deskripsi,
     "harga": harga,
-    "gambar": gambar,
   };
 
   Map<String, String> toMultipartMap() {
@@ -42,7 +39,6 @@ class MenuRequestModel {
       'nama': nama ?? '',
       'harga': harga?.toString() ?? '',
       'deskripsi': deskripsi ?? '',
-      if (gambar != null) 'gambar': gambar!,
     };
   }
 }

@@ -25,7 +25,7 @@ class TransaksiRequestModel {
         pengiriman: json["pengiriman"],
         metodePembayaran: json["metode_pembayaran"],
         detail: List<PemesananRequestModel>.from(
-          json["detail"].map((x) => PemesananRequestModel.fromMap(x)),
+          json["items"].map((x) => PemesananRequestModel.fromMap(x)),
         ),
       );
 
@@ -33,6 +33,23 @@ class TransaksiRequestModel {
     "user_id": userId,
     "pengiriman": pengiriman,
     "metode_pembayaran": metodePembayaran,
-    "detail": detail.map((e) => e.toMap()).toList(),
+    "items": detail.map((e) => e.toMap()).toList(),
   };
+
+  Map<String, String> toMultipartMap() {
+    final Map<String, String> map = {
+      'user_id': userId.toString(),
+      'pengiriman': pengiriman,
+      'metode_pembayaran': metodePembayaran,
+    };
+
+    for (int i = 0; i < detail.length; i++) {
+      map['items[$i][menu_id]'] = detail[i].menuId.toString();
+      map['items[$i][jumlah]'] = detail[i].jumlah.toString();
+      map['items[$i][harga_satuan]'] = detail[i].hargaSatuan.toString();
+      map['items[$i][total_harga]'] = detail[i].totalHarga.toString();
+    }
+
+    return map;
+  }
 }

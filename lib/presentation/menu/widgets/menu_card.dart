@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pempekapp/data/models/response/menu_response_model.dart';
+import 'package:pempekapp/data/services/service_http_client.dart';
 
 class MenuCard extends StatelessWidget {
   final MenuResponseModel menu;
@@ -15,9 +16,9 @@ class MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String baseImageUrl = 'http://10.0.2.2:8000/storage/menu/';
-    final String imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
-        ? '$baseImageUrl${menu.gambar}'
+    final serviceHttpClient = ServiceHttpClient();
+    final imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
+        ? '${serviceHttpClient.storageUrl}${menu.gambar}'
         : 'https://via.placeholder.com/150';
 
     return GestureDetector(
@@ -29,67 +30,94 @@ class MenuCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Bagian gambar
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(12),
               ),
-              child: Image.network(
-                imageUrl,
+              child: Container(
                 height: 150,
                 width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 150,
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: Icon(
-                      Icons.broken_image,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
+                color: Colors.grey[200], // Background color fallback
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    print('Error loading image: $error');
+                    print('Stack trace: $stackTrace');
+                    print('Attempted URL: $imageUrl');
+                    return Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            menu.nama ?? '-',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Icon(
+                            Icons.broken_image,
+                            size: 40,
+                            color: Colors.grey[500],
                           ),
-                          const SizedBox(height: 4),
                           Text(
-                            'Rp ${menu.harga}',
-                            style: const TextStyle(
+                            'Gagal memuat gambar',
+                            style: TextStyle(
                               fontSize: 10,
-                              color: Color(0xFF582D1D),
-                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    IconButton(
-                      onPressed: onAddToCart,
-                      icon: const Icon(Icons.add_shopping_cart),
-                      color: const Color(0xFF582D1D),
-                      tooltip: 'Tambah ke keranjang',
-                    ),
-                  ],
+                    );
+                  },
                 ),
+              ),
+            ),
+            // Bagian informasi menu
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          menu.nama ?? 'Nama Menu',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Rp ${menu.harga ?? '0'}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF582D1D),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onAddToCart,
+                    icon: const Icon(Icons.add_shopping_cart),
+                    color: const Color(0xFF582D1D),
+                    iconSize: 20,
+                  ),
+                ],
               ),
             ),
           ],

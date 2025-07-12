@@ -54,7 +54,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
               itemBuilder: (context, index) {
                 final menu = menus[index];
                 final imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
-                    ? '${serviceHttpClient.storageUrl}menu/${menu.gambar}'
+                    ? '${serviceHttpClient.storageUrl}${menu.gambar}'
                     : 'https://via.placeholder.com/150';
 
                 return Card(
@@ -189,7 +189,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Image.network(
-                          '${serviceHttpClient.storageUrl}menu/${menu.gambar}',
+                          '${serviceHttpClient.storageUrl}${menu.gambar}',
                           height: 100,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
@@ -297,7 +297,7 @@ class _AdminKelolaMenuPageState extends State<AdminKelolaMenuPage> {
 
   void _showDetailDialog(BuildContext context, MenuResponseModel menu) {
     final imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
-        ? '${serviceHttpClient.storageUrl}menu/${menu.gambar}'
+        ? '${serviceHttpClient.storageUrl}${menu.gambar}'
         : 'https://via.placeholder.com/150';
 
     showDialog(

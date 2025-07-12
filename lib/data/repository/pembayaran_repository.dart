@@ -66,6 +66,7 @@ class PembayaranRepository {
         return Right("Pembayaran berhasil diunggah");
       } else {
         final responseBody = await response.stream.bytesToString();
+        log("UPLOAD RESPONSE: $responseBody");
         final res = jsonDecode(responseBody);
         return Left(res['message'] ?? "Gagal upload pembayaran");
       }

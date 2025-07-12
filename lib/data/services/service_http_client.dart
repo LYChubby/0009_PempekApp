@@ -3,9 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ServiceHttpClient {
-  final String baseurl = 'http://10.0.2.2:8000/api/';
+  final String baseurl = 'http://192.168.0.227:8000/api/';
   final String storageUrl =
-      'http://10.0.2.2:8000/storage/'; // Replace with your actual base URL
+      'http://192.168.0.227:8000/storage/'; // Replace with your actual base URL
   final secureStorage = FlutterSecureStorage();
 
   // POST
@@ -154,12 +154,14 @@ class ServiceHttpClient {
   }) async {
     final token = await secureStorage.read(key: 'authToken');
     final uri = Uri.parse('$baseurl$endpoint');
-    final request = http.MultipartRequest('PUT', uri);
+    final request = http.MultipartRequest('POST', uri);
 
     request.headers.addAll({
       'Authorization': 'Bearer $token',
       'Accept': 'application/json',
     });
+
+    fields['_method'] = 'PUT';
 
     request.fields.addAll(fields);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pempekapp/components/bottom_navbar.dart';
 import 'package:pempekapp/data/models/response/menu_response_model.dart';
+import 'package:pempekapp/data/services/service_http_client.dart';
 import 'package:pempekapp/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:pempekapp/presentation/auth/login_screen.dart';
 import 'package:pempekapp/presentation/menu/bloc/menu_bloc.dart';
@@ -17,6 +18,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
+  final serviceHttpClient = ServiceHttpClient();
   final List<Map<String, dynamic>> cart = [];
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -207,7 +209,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                         menu.gambar != null &&
                                             menu.gambar!.isNotEmpty
                                         ? Image.network(
-                                            'http://10.0.2.2:8000/storage/menu/${menu.gambar}',
+                                            '${serviceHttpClient.storageUrl}${menu.gambar}',
                                             fit: BoxFit.cover,
                                             errorBuilder:
                                                 (context, error, stackTrace) =>
@@ -487,7 +489,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
 
   void _showDetailDialog(BuildContext context, MenuResponseModel menu) {
     final imageUrl = menu.gambar != null && menu.gambar!.isNotEmpty
-        ? 'http://10.0.2.2:8000/storage/menu/${menu.gambar}'
+        ? '${serviceHttpClient.storageUrl}${menu.gambar}'
         : 'https://via.placeholder.com/150';
 
     showDialog(

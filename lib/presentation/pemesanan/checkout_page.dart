@@ -23,6 +23,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String? pengiriman;
   String? pembayaran;
   File? buktiBayar;
+  XFile? buktiBayarXFile;
 
   final List<String> metodePengiriman = ['GOJEK', 'GRAB', 'JNE', 'J&T'];
   final List<String> metodePembayaran = [
@@ -35,12 +36,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickBuktiBayar() async {
-    final source = await _showImageSourceDialog(context);
-    if (source == null) return;
+    try {
+      final source = await _showImageSourceDialog(context);
+      if (source == null) return;
 
-    final XFile? picked = await _picker.pickImage(source: source);
-    if (picked != null) {
-      setState(() => buktiBayar = File(picked.path));
+      final XFile? picked = await _picker.pickImage(source: source);
+      if (picked != null) {
+        setState(() {
+          buktiBayar = File(picked.path);
+          buktiBayarXFile = picked;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Gagal memilih gambar: $e')));
     }
   }
 
@@ -103,10 +113,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
       detail: pemesananList,
     );
 
+    // Kirim path + file
+    final pembayaranModel = PembayaranRequestModel(
+      buktiBayar: buktiBayar!.path,
+      buktiBayarFile: XFile(buktiBayar!.path),
+    );
+
     context.read<CheckoutBloc>().add(
       CheckoutSubmitted(
         transaksiRequest: transaksiModel,
-        pembayaranRequest: PembayaranRequestModel(buktiBayar: buktiBayar!.path),
+        pembayaranRequest: pembayaranModel,
       ),
     );
   }
@@ -214,7 +230,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     children: [
                       Image.file(buktiBayar!, height: 150, fit: BoxFit.cover),
                       TextButton(
-                        onPressed: () => setState(() => buktiBayar = null),
+                        onPressed: () => setState(() {
+                          buktiBayar = null;
+                          buktiBayarXFile = null;
+                        }),
                         child: const Text(
                           "Hapus Bukti Bayar",
                           style: TextStyle(color: Colors.red),

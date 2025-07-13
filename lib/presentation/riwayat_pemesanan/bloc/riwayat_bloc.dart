@@ -27,6 +27,7 @@ class RiwayatBloc extends Bloc<RiwayatEvent, RiwayatState> {
         event.transaksiId,
         event.statusBayar,
         event.statusPembayaran,
+        event.statusPesanan,
       );
       result.fold(
         (error) => emit(RiwayatFailure(error: error)),

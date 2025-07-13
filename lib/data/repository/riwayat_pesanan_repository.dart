@@ -36,11 +36,13 @@ class RiwayatPesananRepository {
     int id,
     String status,
     String statusPembayaran,
+    String statusPesanan,
   ) async {
     try {
       final response = await _http.putWithToken("checkout/$id/", {
         'status_bayar': status,
         'status': statusPembayaran,
+        'status_pesanan': statusPesanan,
       });
 
       if (response.statusCode == 200) {

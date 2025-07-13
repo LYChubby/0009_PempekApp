@@ -7,6 +7,7 @@ class RiwayatTransaksiResponseModel {
   final String? metodePembayaran;
   final String? statusBayar;
   final String? statusPembayaran;
+  final String? statusPesanan;
   final String? buktiPembayaran;
   final DateTime? tanggalTransaksi;
   final DateTime? tanggalBayar;
@@ -19,6 +20,7 @@ class RiwayatTransaksiResponseModel {
     this.metodePembayaran,
     this.statusBayar,
     this.statusPembayaran,
+    this.statusPesanan,
     this.buktiPembayaran,
     this.tanggalTransaksi,
     this.tanggalBayar,
@@ -38,6 +40,7 @@ class RiwayatTransaksiResponseModel {
         metodePembayaran: json["metode_pembayaran"],
         statusBayar: json["status_bayar"],
         statusPembayaran: json["status_pembayaran"],
+        statusPesanan: json["status_pesanan"],
         buktiPembayaran: json["bukti_pembayaran"],
         tanggalTransaksi: json["tanggal_transaksi"] == null
             ? null
@@ -57,6 +60,7 @@ class RiwayatTransaksiResponseModel {
     "metode_pembayaran": metodePembayaran,
     "status_bayar": statusBayar,
     "status_pembayaran": statusPembayaran,
+    "status_pesanan": statusPesanan,
     "bukti_pembayaran": buktiPembayaran,
     "tanggal_transaksi": tanggalTransaksi?.toIso8601String(),
     "tanggal_bayar": tanggalBayar?.toIso8601String(),

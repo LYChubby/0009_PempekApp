@@ -308,6 +308,10 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
                     ),
                     const Spacer(),
                     _buildStatusBadge(transaksi.statusBayar ?? 'N/A'),
+                    const SizedBox(width: 8),
+                    _buildOrderStatusBadge(
+                      transaksi.statusPesanan ?? 'diterima',
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -432,6 +436,64 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
     );
   }
 
+  Widget _buildOrderStatusBadge(String status) {
+    Map<String, dynamic> statusConfig = {
+      'diterima': {
+        'color': Colors.blue,
+        'icon': Icons.check_circle_outline,
+        'label': 'Diterima',
+      },
+      'diproses': {
+        'color': Colors.orange,
+        'icon': Icons.timer,
+        'label': 'Diproses',
+      },
+      'dikirim': {
+        'color': Colors.purple,
+        'icon': Icons.local_shipping,
+        'label': 'Dikirim',
+      },
+      'selesai': {
+        'color': Colors.green,
+        'icon': Icons.check_circle,
+        'label': 'Selesai',
+      },
+      'dibatalkan': {
+        'color': Colors.red,
+        'icon': Icons.cancel,
+        'label': 'Dibatalkan',
+      },
+    };
+
+    final config =
+        statusConfig[status.toLowerCase()] ??
+        {'color': Colors.grey, 'icon': Icons.help_outline, 'label': status};
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: config['color'].withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: config['color'].withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(config['icon'], size: 14, color: config['color']),
+          const SizedBox(width: 4),
+          Text(
+            config['label'],
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: config['color'],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -548,6 +610,10 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
                           _buildDetailItem(
                             "Status Pembayaran",
                             transaksi.statusPembayaran ?? 'N/A',
+                          ),
+                          _buildDetailItem(
+                            "Status Pesanan",
+                            transaksi.statusPesanan ?? 'N/A',
                           ),
                         ],
                       ),
@@ -1015,12 +1081,20 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
 
   final List<String> statusPembayaranOptions = ['pending', 'terverifikasi'];
 
+  final List<String> statusPesananOptions = [
+    'diterima',
+    'diproses',
+    'dikirim',
+    'selesai',
+  ];
+
   void _showEditDialog(
     BuildContext context,
     RiwayatTransaksiResponseModel transaksi,
   ) {
     String? selectedStatusBayar = transaksi.statusBayar;
     String? selectedStatusPembayaran = transaksi.statusPembayaran;
+    String? selectedStatusPesanan = transaksi.statusPesanan;
 
     showDialog(
       context: context,
@@ -1088,6 +1162,31 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
                   });
                 },
               ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: selectedStatusPesanan,
+                decoration: InputDecoration(
+                  labelText: "Status Pesanan",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: primaryColor, width: 2),
+                  ),
+                ),
+                items: statusPesananOptions.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedStatusPesanan = newValue;
+                  });
+                },
+              ),
             ],
           ),
           actions: [
@@ -1110,6 +1209,8 @@ class _RiwayatPesananPageState extends State<RiwayatPesananPage>
                         selectedStatusPembayaran ??
                         transaksi.statusPembayaran ??
                         '',
+                    statusPesanan:
+                        selectedStatusPesanan ?? transaksi.statusPesanan ?? '',
                   ),
                 );
               },

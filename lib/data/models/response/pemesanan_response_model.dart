@@ -7,6 +7,7 @@ class PemesananResponseModel {
   final int? jumlah;
   final int? hargaSatuan;
   final int? totalHarga;
+  final String? statusPesanan;
   final String? pengiriman;
   final String? metodePembayaran;
   final String? statusBayar;
@@ -22,6 +23,7 @@ class PemesananResponseModel {
     this.jumlah,
     this.hargaSatuan,
     this.totalHarga,
+    this.statusPesanan,
     this.pengiriman,
     this.metodePembayaran,
     this.statusBayar,
@@ -44,6 +46,7 @@ class PemesananResponseModel {
         jumlah: json["jumlah"],
         hargaSatuan: json["harga_satuan"],
         totalHarga: json["total_harga"],
+        statusPesanan: json["status_pesanan"],
         pengiriman: json["pengiriman"],
         metodePembayaran: json["metode_pembayaran"],
         statusBayar: json["status_bayar"],
@@ -64,6 +67,7 @@ class PemesananResponseModel {
     "jumlah": jumlah,
     "harga_satuan": hargaSatuan,
     "total_harga": totalHarga,
+    "status_pesanan" : statusPesanan,
     "pengiriman": pengiriman,
     "metode_pembayaran": metodePembayaran,
     "status_bayar": statusBayar,

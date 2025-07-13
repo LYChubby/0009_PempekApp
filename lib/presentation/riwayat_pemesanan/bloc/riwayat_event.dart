@@ -21,14 +21,21 @@ class DeleteRiwayatTransaksi extends RiwayatEvent {
 class UpdateStatusRiwayatTransaksi extends RiwayatEvent {
   final int transaksiId;
   final String statusBayar;
+  final String statusPesanan;
   final String statusPembayaran;
 
   const UpdateStatusRiwayatTransaksi({
     required this.transaksiId,
     required this.statusBayar,
+    required this.statusPesanan,
     required this.statusPembayaran,
   });
 
   @override
-  List<Object> get props => [transaksiId, statusBayar];
+  List<Object> get props => [
+    transaksiId,
+    statusBayar,
+    statusPesanan,
+    statusPembayaran,
+  ];
 }

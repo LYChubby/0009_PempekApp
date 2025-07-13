@@ -289,7 +289,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Selamat Datang, Admin!',
+                                  'Selamat Datang',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,

@@ -633,7 +633,7 @@ class _EnhancedStatCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                   maxLines: 1,
@@ -699,7 +699,7 @@ class _EnhancedDashboardCard extends StatelessWidget {
                   label,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),

@@ -97,7 +97,7 @@ class _BarangMasukPageState extends State<BarangMasukPage> {
                     controller: jumlahController,
                     label: 'Jumlah',
                     icon: Icons.numbers,
-                    keyboardType: TextInputType.number,
+
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Jumlah harus diisi';
